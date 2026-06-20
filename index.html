@@ -263,6 +263,10 @@
     const lineH   = window.innerHeight - lineTop - 90;
     const y       = lineTop + lineH * progress;
 
+    // Set number to total days immediately so animation counts down from there
+    const totalDays = Math.round((ARRIVAL - START) / 86400000);
+    document.getElementById('days-num').textContent = totalDays;
+
     // Start at top
     document.getElementById('her-wrapper').style.transition = 'none';
     document.getElementById('line-progress').style.transition = 'none';
