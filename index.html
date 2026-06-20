@@ -277,6 +277,19 @@
         setTimeout(() => {
           document.getElementById('her-wrapper').style.top = y + 'px';
           document.getElementById('line-progress').style.height = Math.max(0, y - lineTop) + 'px';
+
+          // Count down the days number during the slide
+          const totalDays = Math.round((ARRIVAL - START) / 86400000);
+          const duration  = 1600;
+          const startTime = performance.now();
+          function animateCount(now) {
+            const t        = Math.min((now - startTime) / duration, 1);
+            const eased    = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+            const current  = Math.round(totalDays - (totalDays - days) * eased);
+            document.getElementById('days-num').textContent = current;
+            if (t < 1) requestAnimationFrame(animateCount);
+          }
+          requestAnimationFrame(animateCount);
         }, 300);
       });
     });
