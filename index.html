@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Countdown</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      height: 100dvh;
+      background: #EBEBEB;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+      color: #1c1c1e;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Labels */
+    .label {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      z-index: 2;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    #label-rj { top: 48px; }
+    #label-ca { bottom: 48px; }
+
+    /* Line */
+    .line {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      background: linear-gradient(to bottom, #c8c8c8, #b0b0b0);
+      top: 90px;
+      bottom: 90px;
+      z-index: 1;
+    }
+
+    /* Avatar wrapper — moves along the line */
+    .avatar-wrapper {
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Placeholder when no image */
+    .avatar-placeholder {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #d0d0d0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+    }
+
+    /* Counter */
+    .counter {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .counter-num {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .counter-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #1c1c1e;
+      letter-spacing: 0.02em;
+      margin-top: 2px;
+    }
+
+    /* His avatar — fixed at bottom */
+    .avatar-bottom {
+      position: absolute;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+    }
+
+    /* ── Arrival state ── */
+    body.arrived {
+      background: #FFE4EC;
+    }
+
+    body.arrived .line { opacity: 0; }
+
+    .arrival-msg {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    body.arrived .arrival-msg { display: flex; }
+    body.arrived .avatar-wrapper { display: none; }
+    body.arrived #label-rj,
+    body.arrived #label-ca { display: none; }
+
+    .arrival-msg h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .arrival-msg p {
+      font-size: 16px;
+      color: rgba(28,28,30,0.6);
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="label" id="label-rj">RJ</div>
+
+  <div class="line"></div>
+
+  <!-- Her avatar — moves along the line -->
+  <div class="avatar-wrapper" id="her-wrapper">
+    <!-- Replace with: <img class="avatar" src="her.png" /> -->
+    <div class="avatar-placeholder">👩🏽</div>
+    <div class="counter">
+      <div class="counter-num" id="days-num">—</div>
+      <div class="counter-label">Dias</div>
+    </div>
+  </div>
+
+  <!-- His avatar — fixed at bottom -->
+  <div class="avatar-bottom">
+    <!-- Replace with: <img class="avatar" src="him.png" /> -->
+    <div class="avatar-placeholder">👨🏾</div>
+  </div>
+
+  <!-- Arrival screen -->
+  <div class="arrival-msg">
+    <div style="font-size:64px">🎉</div>
+    <h1>Ela chegou!</h1>
+    <p>Hoje é o dia ❤️</p>
+  </div>
+
+  <div class="label" id="label-ca">CA</div>
+
+<script>
+  const ARRIVAL = new Date('2026-07-01T00:00:00');
+  const START   = new Date('2026-06-19T00:00:00'); // adjust as needed
+
+  function calcDays() {
+    const now = new Date(); now.setHours(0,0,0,0);
+    return Math.round((ARRIVAL - now) / 86400000);
+  }
+
+  function calcProgress() {
+    const now   = new Date(); now.setHours(0,0,0,0);
+    const total = Math.round((ARRIVAL - START) / 86400000);
+    const gone  = Math.round((now - START) / 86400000);
+    return Math.min(Math.max(gone / total, 0), 1);
+  }
+
+  function render() {
+    const days     = calcDays();
+    const progress = calcProgress();
+
+    if (days <= 0) {
+      document.body.classList.add('arrived');
+      return;
+    }
+
+    document.getElementById('days-num').textContent = days;
+
+    // Position her avatar along the line
+    const lineTop    = 90;
+    const lineBottom = 90;
+    const lineH      = window.innerHeight - lineTop - lineBottom;
+    const y          = lineTop + lineH * progress;
+
+    document.getElementById('her-wrapper').style.top = y + 'px';
+  }
+
+  render();
+  window.addEventListener('resize', render);
+</script>
+</body>
+</html>
