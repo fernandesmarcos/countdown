@@ -24,6 +24,7 @@
       font-size: 18px;
       font-weight: 600;
       letter-spacing: -0.36px;
+      color: #A1A4A9;
       z-index: 2;
       position: absolute;
       left: 50%;
@@ -38,13 +39,27 @@
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      width: 1px;
-      background: linear-gradient(to bottom, #c8c8c8, #b0b0b0);
+      width: 8px;
+      border-radius: 4px;
+      background: #DBDEE2;
       top: 90px;
       bottom: 90px;
       z-index: 1;
     }
 
+
+    /* Progress line — path already traveled */
+    .line-progress {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 8px;
+      border-radius: 4px 4px 0 0;
+      background: #32C75A;
+      top: 90px;
+      height: 0;
+      z-index: 2;
+    }
     /* Avatar — centered exactly on the line */
     .avatar-wrapper {
       position: absolute;
@@ -90,12 +105,13 @@
       font-weight: 800;
       letter-spacing: -0.04em;
       line-height: 1;
+      color: #32C75A;
     }
 
     .counter-label {
       font-size: 18px;
       font-weight: 600;
-      color: #1c1c1e;
+      color: #A1A4A9;
       letter-spacing: -0.36px;
       margin-top: 2px;
     }
@@ -167,6 +183,7 @@
   <div class="label" id="label-rj">RJ</div>
 
   <div class="line"></div>
+  <div class="line-progress" id="line-progress"></div>
 
   <!-- Her avatar — moves along the line -->
     <div class="avatar-wrapper" id="her-wrapper">
@@ -225,6 +242,11 @@
     const y          = lineTop + lineH * progress;
 
     document.getElementById('her-wrapper').style.top = y + 'px';
+
+    // Update green progress line
+    const lineTop = 90;
+    const progressH = Math.max(0, y - lineTop);
+    document.getElementById('line-progress').style.height = progressH + 'px';
   }
 
   render();
