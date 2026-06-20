@@ -144,6 +144,21 @@
       color: rgba(28,28,30,0.6);
       font-weight: 500;
     }
+
+    /* ── Hearts ── */
+    .heart {
+      position: fixed;
+      font-size: 22px;
+      pointer-events: none;
+      z-index: 999;
+      animation: floatHeart 1s ease-out forwards;
+      user-select: none;
+    }
+
+    @keyframes floatHeart {
+      0%   { transform: translate(0, 0) scale(1);   opacity: 1; }
+      100% { transform: translate(var(--dx), -120px) scale(0.5); opacity: 0; }
+    }
   </style>
 </head>
 <body>
@@ -213,6 +228,23 @@
 
   render();
   window.addEventListener('resize', render);
+
+  // ── Heart burst on tap ───────────────────────────────────────────────────
+  document.addEventListener('pointerdown', function(e) {
+    const count = 6;
+    for (let i = 0; i < count; i++) {
+      const el = document.createElement('span');
+      el.className = 'heart';
+      el.textContent = '💚';
+      const dx = (Math.random() - 0.5) * 60;
+      el.style.setProperty('--dx', dx + 'px');
+      el.style.left = (e.clientX - 11) + 'px';
+      el.style.top  = (e.clientY - 11) + 'px';
+      el.style.animationDelay = (i * 60) + 'ms';
+      document.body.appendChild(el);
+      el.addEventListener('animationend', () => el.remove());
+    }
+  });
 </script>
 </body>
 </html>
