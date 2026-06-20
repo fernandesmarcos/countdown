@@ -156,8 +156,9 @@
     }
 
     @keyframes floatHeart {
-      0%   { transform: translate(0, 0) scale(1);   opacity: 1; }
-      100% { transform: translate(var(--dx), -120px) scale(0.5); opacity: 0; }
+      0%   { transform: translate(0, 0) scale(1.2); opacity: 1; }
+      15%  { transform: translate(calc(var(--dx) * 0.3), calc(var(--dy) * 0.3)) scale(0.9); }
+      100% { transform: translate(var(--dx), var(--dy)) scale(0.3); opacity: 0; }
     }
   </style>
 </head>
@@ -231,16 +232,25 @@
 
   // ── Heart burst on tap ───────────────────────────────────────────────────
   document.addEventListener('pointerdown', function(e) {
-    const count = 6;
+    const count = 14;
     for (let i = 0; i < count; i++) {
       const el = document.createElement('span');
       el.className = 'heart';
       el.textContent = '💚';
-      const dx = (Math.random() - 0.5) * 60;
+
+      // Spread in all directions, bias upward
+      const angle = (Math.random() * 360) * (Math.PI / 180);
+      const dist  = 80 + Math.random() * 80;
+      const dx    = Math.cos(angle) * dist;
+      const dy    = Math.sin(angle) * dist - 60; // bias upward
+
       el.style.setProperty('--dx', dx + 'px');
-      el.style.left = (e.clientX - 11) + 'px';
-      el.style.top  = (e.clientY - 11) + 'px';
-      el.style.animationDelay = (i * 60) + 'ms';
+      el.style.setProperty('--dy', dy + 'px');
+      el.style.left             = (e.clientX - 11) + 'px';
+      el.style.top              = (e.clientY - 11) + 'px';
+      el.style.fontSize         = (16 + Math.random() * 14) + 'px';
+      el.style.animationDuration = (0.7 + Math.random() * 0.5) + 's';
+      el.style.animationDelay   = (i * 30) + 'ms';
       document.body.appendChild(el);
       el.addEventListener('animationend', () => el.remove());
     }
