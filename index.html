@@ -14,7 +14,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding-top: 80px;
+    padding-top: 140px;
     overflow: hidden;
     user-select: none;
   }
@@ -88,7 +88,7 @@
 
   .blob {
     position: fixed;
-    bottom: -220px;
+    bottom: -320px;
     left: 50%;
     transform: translateX(-50%);
     width: 700px;
@@ -98,6 +98,7 @@
     filter: blur(65px);
     z-index: 0;
     pointer-events: none;
+    animation: breathe 8s ease-in-out infinite;
   }
 
     /* Heart animation */
@@ -133,6 +134,10 @@
   }
   body.arrived .countdown-wrap { display: none; }
   body.arrived .arrived-msg { display: flex; }
+  @keyframes breathe {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.85; }
+    50%       { transform: translateX(-50%) scale(1.18); opacity: 1; }
+  }
 </style>
 </head>
 <body>
